@@ -1,0 +1,1 @@
+# Modelo entrenado (archivo generado tras el entrenamiento)
