@@ -1,1 +1,0 @@
-# Datos procesados (archivo: processed_machine_data.csv)
