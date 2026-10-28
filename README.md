@@ -1,96 +1,21 @@
-# Predictive Maintenance for Industrial Equipment
+# Mantenimiento industrial — estudio histórico y migración
 
-## Descripción
-Este proyecto tiene como objetivo desarrollar un modelo de Machine Learning que permita predecir el mantenimiento preventivo en equipos industriales. El mantenimiento predictivo es una técnica avanzada que utiliza datos históricos y en tiempo real para prever fallos en los equipos antes de que ocurran, permitiendo a las empresas reducir tiempos de inactividad, optimizar recursos y mejorar la seguridad en sus procesos productivos.
+Este repositorio es el precursor del [Industrial Condition Monitor](https://github.com/GzoC/real_time_predictive_monitoring). La implementación activa y la investigación corregida se concentran en ese proyecto.
 
-### ¿Por qué es importante?
-La industria manufacturera y de procesos enfrenta constantes desafíos relacionados con fallos inesperados en sus equipos, lo que puede traducirse en:
-- Paradas imprevistas en la producción.
-- Costos elevados en reparaciones urgentes.
-- Pérdida de tiempo y disminución de la eficiencia.
+**Corrección del resultado histórico:** el 100 % publicado dependía de `failure_type`, que reproduce la etiqueta `maintenance_required` en las 10.000 filas. Ese diagnóstico introducía la respuesta entre las entradas del modelo. El resultado no acredita anticipación de fallos ni de mantenimiento.
 
-Este proyecto aborda estos problemas proporcionando un modelo de predicción que permite anticipar el momento ideal para realizar el mantenimiento de cada equipo industrial.
+## Reevaluación sin fuga
 
-## Estructura del Proyecto
-```
-predictive_maintenance/
-│
-├── data/
-│   ├── raw/                  # Datos sin procesar
-│   └── processed/            # Datos procesados listos para modelado
-│
-├── notebooks/
-│   ├── 01_exploratory_data_analysis.ipynb  # Análisis exploratorio de datos (EDA)
-│   ├── 02_data_preprocessing.ipynb         # Limpieza y transformación de datos
-│   ├── 03_model_development.ipynb          # Entrenamiento y evaluación del modelo
-│
-├── src/                      # Código fuente reutilizable
-│   ├── __init__.py
-│   ├── preprocessing.py      # Funciones de preprocesamiento
-│   └── models.py             # Funciones de modelado y evaluación
-│
-├── models/                   # Modelos entrenados guardados (ej.: model_v1.pkl)
-│
-├── reports/                  # Visualizaciones y reportes generados
-│   └── figures/
-│
-├── requirements.txt          # Dependencias del proyecto
-├── README.md                 # Documentación del proyecto
-└── .gitignore                # Archivos y carpetas a ignorar en Git
-```
+Se excluyen diagnóstico, identificador y etiqueta de las entradas. Las transformaciones se ajustan después de separar entrenamiento/validación/prueba. En 2.000 filas reservadas, con 305 positivos, la regresión logística obtiene ROC AUC 0,508 y Gradient Boosting 0,471. Los umbrales elegidos solo con F2 de validación generan 1.695 y 1.694 falsas alarmas, prácticamente lo mismo que declarar siempre alarma. No se sostiene una capacidad útil de anticipación a partir de este experimento.
 
-## Instalación
+- [Informe completo y reproducción en el sucesor](https://github.com/GzoC/real_time_predictive_monitoring/blob/codex/maintenance-leakage-study/docs/research/LEGACY_MAINTENANCE.md).
+- [Copia del resultado medido](reports/legacy_maintenance_audit.json), con hash, particiones, modelos, umbrales y limitaciones.
+- [Procedencia del CSV histórico](data/README.md): fuente, generador y licencia sin verificar; no se presenta como UCI/AI4I ni como telemetría de planta.
 
-1. Clona el repositorio:
-   ```bash
-   git clone https://github.com/GzoC/predictive_maintenance_01.git
-   ```
+## Estado e historial
 
-2. Navega a la carpeta del proyecto:
-   ```bash
-   cd predictive_maintenance
-   ```
+Esta rama prepara el retiro del precursor. El archivo administrativo en GitHub se realizará después de integrar la investigación en el sucesor y este aviso en main. Mientras tanto el repositorio permanece abierto para revisar los cambios. El monitor y el análisis serán los proyectos a destacar.
 
-3. Crea y activa el entorno virtual (usando Conda con `--prefix`):
-   ```bash
-   conda create --prefix D:\gzo\myProjects\dataAnalyst\environments\predictive_maintenance python=3.9
-   conda activate D:\gzo\myProjects\dataAnalyst\environments\predictive_maintenance
-   ```
+Los notebooks, preprocesadores, CSV procesado y pickle históricos se retiraron del árbol actual para evitar que se ejecuten o interpreten como resultados vigentes. Se conserva íntegro el historial y un respaldo Git. La versión anterior puede inspeccionarse en [c69f802](https://github.com/GzoC/predictive_maintenance_01/tree/c69f8024fd1f014f7f2de591f5594cc21b14a69d); no es necesario cargar su modelo serializado para reproducir la auditoría.
 
-4. Instala las dependencias:
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-## Uso
-
-1. Coloca tus datos crudos en la carpeta `data/raw/`.
-2. Ejecuta los notebooks en el siguiente orden:
-   - `01_exploratory_data_analysis.ipynb` (Análisis Exploratorio de Datos para detectar patrones y correlaciones).
-   - `02_data_preprocessing.ipynb` (Limpieza y transformación de datos para preparar el dataset para el modelado).
-   - `03_model_development.ipynb` (Entrenamiento del modelo de Machine Learning y evaluación de su rendimiento).
-3. Guarda el modelo entrenado utilizando la función de `src/models.py`.
-4. Carga el modelo guardado y verifica la consistencia de las predicciones.
-5. El modelo final se guardará en `models/model_v1.pkl`.
-
-## Tecnologías Utilizadas
-- **Python 3.9**
-- **Scikit-learn** para el desarrollo del modelo predictivo.
-- **Pandas** y **NumPy** para la manipulación y análisis de datos.
-- **Matplotlib** y **Seaborn** para la visualización de datos y resultados.
-- **Joblib** para guardar y cargar el modelo entrenado de forma eficiente.
-
-## Contribución
-
-Si deseas contribuir, por favor haz un fork del repositorio, crea una rama con tus mejoras y envía un Pull Request.
-
-## Licencia
-
-Este proyecto se distribuye bajo la licencia [MIT](https://opensource.org/licenses/MIT).
-
-## Contacto
-
-Para dudas o sugerencias, puedes contactar a:  
-**Gonzalo Cisterna Salinas / GzoC**  
-**Email:** cisternasalinasg@gmail.com
-
+El CSV crudo permanece únicamente como evidencia del análisis. La licencia MIT del código no acredita la licencia del dataset. Para la demostración activa se usa AI4I 2020 con procedencia y atribución documentadas en el sucesor.
